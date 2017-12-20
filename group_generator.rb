@@ -3,7 +3,9 @@ require 'csv'
 module GroupGenerator
   module_function
 
-  def add_new_lunchers(new_lunchers, destination_file)
+  def add_new_lunchers(destination_file, new_lunchers)
+    File.new(destination_file, 'w') unless File.exist?(destination_file)
+
     File.open(destination_file, 'a') do |file|
       new_lunchers
         .compact
@@ -12,20 +14,22 @@ module GroupGenerator
   end
 
   def generate_groups(participants)
-    participants = participants.shuffle
+    participants = participants
+                     .shuffle
+                     .map(&:chomp)
 
     return [participants] if participants.count < 3
 
     case participants.count % 3
     when 0
-      return participants.each_slice(3).to_a
+      participants.each_slice(3).to_a
     when 1
       groups = participants.each_slice(3).to_a
       last_group = groups.pop
 
       groups.last.concat(last_group)
 
-      return groups
+      groups
     when 2
       groups = participants.each_slice(3).to_a
 
@@ -34,8 +38,8 @@ module GroupGenerator
       groups[-1] << last_person
       groups[-2] << second_to_last_person
 
-      return groups
-      end
+      groups
+    end
   end
 
   def print_participants(participants)
