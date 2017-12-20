@@ -31,7 +31,7 @@ describe GroupGenerator do
       participants = fetch_participants(@file_path)
       participants.count.must_equal 4
 
-      GroupGenerator.add_new_lunchers(['Green', 'Eggs'], @file_path)
+      GroupGenerator.add_new_lunchers(@file_path, ['Green', 'Eggs'])
 
       participants = fetch_participants(@file_path)
       participants.count.must_equal 6
